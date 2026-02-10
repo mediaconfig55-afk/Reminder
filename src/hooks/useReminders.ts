@@ -30,5 +30,20 @@ export const useReminders = (searchQuery: string = '', categoryId: number | null
         loadReminders();
     }, [loadReminders]);
 
+    // Force refresh when screen is focused (e.g. returning from modal)
+    // Adding a small delay to ensure DB write is complete
+    useFocusEffect(
+        useCallback(() => {
+            let isActive = true;
+            const timer = setTimeout(() => {
+                if (isActive) loadReminders();
+            }, 100);
+            return () => {
+                isActive = false;
+                clearTimeout(timer);
+            };
+        }, [loadReminders])
+    );
+
     return { reminders, loading, refresh: loadReminders };
 };

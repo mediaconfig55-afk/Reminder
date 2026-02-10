@@ -25,7 +25,7 @@ export default function ModalScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [priority, setPriority] = useState(0); // 0: None, 1: Medium, 2: High
-  const [notificationSound, setNotificationSound] = useState('default');
+
   const [repeatType, setRepeatType] = useState<'none' | 'daily' | 'weekly' | 'monthly' | 'custom'>('none');
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -57,7 +57,7 @@ export default function ModalScreen() {
       if (reminder.dueDate) setDate(new Date(reminder.dueDate));
       setPriority(reminder.priority);
       setCategoryId(reminder.categoryId);
-      setNotificationSound(reminder.notificationSound || 'default');
+
       setRepeatType((reminder.repeatType as any) || 'none');
 
       const loadedSubtasks = await ReminderDB.getSubtasks(reminderId);
@@ -101,7 +101,7 @@ export default function ModalScreen() {
         categoryId: categoryId || 1,
         isCompleted: 0,
         repeatType,
-        notificationSound,
+
         createdAt: isEditing ? undefined : Date.now(),
       };
 
@@ -204,7 +204,12 @@ export default function ModalScreen() {
             display="default"
             onChange={(event, selectedDate) => {
               setShowDatePicker(false);
-              if (selectedDate) setDate(selectedDate);
+              if (selectedDate) {
+                const newDate = new Date(selectedDate);
+                newDate.setSeconds(0);
+                newDate.setMilliseconds(0);
+                setDate(newDate);
+              }
             }}
           />
         )}
@@ -216,7 +221,12 @@ export default function ModalScreen() {
             display="default"
             onChange={(event, selectedDate) => {
               setShowTimePicker(false);
-              if (selectedDate) setDate(selectedDate);
+              if (selectedDate) {
+                const newDate = new Date(selectedDate);
+                newDate.setSeconds(0);
+                newDate.setMilliseconds(0);
+                setDate(newDate);
+              }
             }}
           />
         )}
@@ -285,24 +295,7 @@ export default function ModalScreen() {
           </View>
         </View>
 
-        {/* Notification Sound */}
-        <Text style={[styles.sectionTitle, { color: colors.subtext }]}>Bildirim Sesi</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
-          {['default', 'urgent', 'soft'].map((sound) => (
-            <TouchableOpacity
-              key={sound}
-              style={[
-                styles.chip,
-                notificationSound === sound ? { backgroundColor: colors.primary } : { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border }
-              ]}
-              onPress={() => setNotificationSound(sound)}
-            >
-              <Text style={{ color: notificationSound === sound ? '#000' : colors.text }}>
-                {sound === 'default' ? 'Varsayılan' : sound === 'urgent' ? 'Acil' : 'Hafif'}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+
 
         {/* Category */}
         <Text style={[styles.sectionTitle, { color: colors.subtext }]}>Kategori</Text>

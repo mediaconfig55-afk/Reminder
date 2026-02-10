@@ -106,7 +106,7 @@ export default function TabOneScreen() {
               ]}
               onPress={() => setFilterType(ft)}
             >
-              <Text style={{ color: filterType === ft ? '#FFF' : colors.text, fontSize: 12 }}>
+              <Text style={{ color: filterType === ft ? '#000' : colors.text, fontSize: 12 }}>
                 {ft === 'all' ? 'Tümü' : ft === 'today' ? 'Bugün' : ft === 'upcoming' ? 'Yaklaşan' : ft === 'flagged' ? 'Önemli' : 'Tamamlanan'}
               </Text>
             </TouchableOpacity>
@@ -122,7 +122,7 @@ export default function TabOneScreen() {
             ]}
             onPress={() => setSelectedCategoryId(null)}
           >
-            <Text style={{ color: !selectedCategoryId ? '#FFF' : colors.text, fontSize: 12 }}>Tümü</Text>
+            <Text style={{ color: !selectedCategoryId ? '#000' : colors.text, fontSize: 12 }}>Tümü</Text>
           </TouchableOpacity>
 
           {categories.map((cat) => (
@@ -134,7 +134,7 @@ export default function TabOneScreen() {
               ]}
               onPress={() => setSelectedCategoryId(selectedCategoryId === cat.id ? null : cat.id)}
             >
-              <Text style={{ color: selectedCategoryId === cat.id ? '#FFF' : colors.text, fontSize: 12 }}>
+              <Text style={{ color: selectedCategoryId === cat.id ? '#000' : colors.text, fontSize: 12 }}>
                 {cat.name}
               </Text>
             </TouchableOpacity>

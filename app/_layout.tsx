@@ -71,7 +71,7 @@ export default function RootLayout() {
           // Snooze for 15 minutes
           const reminder = await ReminderDB.getReminderById(reminderId);
           if (reminder && reminder.dueDate) {
-            const newDate = new Date().getTime() + 15 * 60 * 1000;
+            const newDate = new Date().getTime() + 5 * 60 * 1000;
             await ReminderDB.updateReminder(reminderId, { dueDate: newDate });
             await scheduleReminderNotification({ ...reminder, dueDate: newDate });
           }
@@ -102,7 +102,8 @@ function RootLayoutNav() {
     <NavigationThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerStyle: { backgroundColor: colors.background }, headerTintColor: colors.text }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       </Stack>
     </NavigationThemeProvider>
   );

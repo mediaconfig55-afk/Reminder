@@ -233,7 +233,7 @@ export default function ModalScreen() {
               ]}
               onPress={() => setPriority(p)}
             >
-              <Text style={{ color: priority === p ? '#FFF' : colors.text }}>
+              <Text style={{ color: priority === p ? '#000' : colors.text }}>
                 {p === 0 ? 'Düşük' : p === 1 ? 'Orta' : 'Yüksek'}
               </Text>
             </TouchableOpacity>
@@ -252,7 +252,7 @@ export default function ModalScreen() {
               ]}
               onPress={() => setRepeatType(rpt as any)}
             >
-              <Text style={{ color: repeatType === rpt ? '#FFF' : colors.text }}>
+              <Text style={{ color: repeatType === rpt ? '#000' : colors.text }}>
                 {rpt === 'none' ? 'Yok' : rpt === 'daily' ? 'Günlük' : rpt === 'weekly' ? 'Haftalık' : 'Aylık'}
               </Text>
             </TouchableOpacity>
@@ -297,7 +297,7 @@ export default function ModalScreen() {
               ]}
               onPress={() => setNotificationSound(sound)}
             >
-              <Text style={{ color: notificationSound === sound ? '#FFF' : colors.text }}>
+              <Text style={{ color: notificationSound === sound ? '#000' : colors.text }}>
                 {sound === 'default' ? 'Varsayılan' : sound === 'urgent' ? 'Acil' : 'Hafif'}
               </Text>
             </TouchableOpacity>
@@ -316,7 +316,7 @@ export default function ModalScreen() {
               ]}
               onPress={() => setCategoryId(cat.id)}
             >
-              <Text style={{ color: categoryId === cat.id ? '#FFF' : colors.text }}>
+              <Text style={{ color: categoryId === cat.id ? '#000' : colors.text }}>
                 {cat.name}
               </Text>
             </TouchableOpacity>

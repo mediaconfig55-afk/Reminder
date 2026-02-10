@@ -60,7 +60,7 @@ export const ReminderItem = React.memo<ReminderItemProps>(
                         ]}
                         onPress={() => onPress(reminder.id)}
                     >
-                        <Pressable onPress={handleToggle} style={styles.checkboxContainer} hitSlop={10}>
+                        <Pressable onPress={handleToggle} style={styles.checkboxContainer} hitSlop={20}>
                             <Animated.View style={[styles.checkbox, { borderColor: colors.subtext }, checkboxStyle]}>
                                 {reminder.isCompleted && <Check size={14} color="#FFF" />}
                             </Animated.View>

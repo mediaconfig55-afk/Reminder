@@ -204,6 +204,11 @@ export const deleteSubtask = async (id: number): Promise<void> => {
     await db.runAsync('DELETE FROM subtasks WHERE id = ?', [id]);
 };
 
+export const clearSubtasks = async (reminderId: number): Promise<void> => {
+    const db = await getDBConnection();
+    await db.runAsync('DELETE FROM subtasks WHERE reminderId = ?', [reminderId]);
+};
+
 export const getStatistics = async () => {
     const db = await getDBConnection();
     const totalResult = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM reminders');

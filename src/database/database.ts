@@ -38,6 +38,7 @@ export const getDBConnection = async () => {
 export const initDatabase = async () => {
   const db = await getDBConnection();
 
+  // 1. Create Tables
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS categories (
@@ -46,7 +47,6 @@ export const initDatabase = async () => {
       color TEXT NOT NULL,
       icon TEXT NOT NULL
     );
-    
     CREATE TABLE IF NOT EXISTS reminders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
@@ -62,7 +62,6 @@ export const initDatabase = async () => {
       notificationSound TEXT DEFAULT 'default',
       FOREIGN KEY (categoryId) REFERENCES categories (id)
     );
-
     CREATE TABLE IF NOT EXISTS subtasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       reminderId INTEGER NOT NULL,
@@ -71,19 +70,32 @@ export const initDatabase = async () => {
       createdAt INTEGER,
       FOREIGN KEY (reminderId) REFERENCES reminders (id) ON DELETE CASCADE
     );
+  `);
 
-    // Check for schema updates (simple migration)
-    try {
-      const tableInfo = await db.getAllAsync('PRAGMA table_info(reminders)');
-      // @ts-ignore
-      const hasSoundColumn = tableInfo.some(col => col.name === 'notificationSound');
-      if (!hasSoundColumn) {
-        await db.execAsync("ALTER TABLE reminders ADD COLUMN notificationSound TEXT DEFAULT 'default'");
-      }
-    } catch (e) {
-      console.log('Migration check failed or not needed', e);
+  // 2. Perform Migrations (in JS)
+  try {
+    const tableInfo = await db.getAllAsync<{ name: string }>('PRAGMA table_info(reminders)');
+    // @ts-ignore
+    const columns = tableInfo.map(col => col.name);
+
+    if (!columns.includes('notificationSound')) {
+      await db.execAsync("ALTER TABLE reminders ADD COLUMN notificationSound TEXT DEFAULT 'default'");
     }
+    if (!columns.includes('repeatType')) {
+      await db.execAsync("ALTER TABLE reminders ADD COLUMN repeatType TEXT");
+    }
+    if (!columns.includes('snoozeInterval')) {
+      await db.execAsync("ALTER TABLE reminders ADD COLUMN snoozeInterval INTEGER");
+    }
+    if (!columns.includes('createdAt')) {
+      await db.execAsync("ALTER TABLE reminders ADD COLUMN createdAt INTEGER");
+    }
+  } catch (e) {
+    console.log('Migration check failed', e);
+  }
 
+  // 3. Insert Default Data
+  await db.execAsync(`
     INSERT OR IGNORE INTO categories (id, name, color, icon) VALUES (1, 'Genel', '#2196F3', 'inbox');
     INSERT OR IGNORE INTO categories (id, name, color, icon) VALUES (2, 'İş', '#4CAF50', 'briefcase');
     INSERT OR IGNORE INTO categories (id, name, color, icon) VALUES (3, 'Kişisel', '#FF9800', 'user');

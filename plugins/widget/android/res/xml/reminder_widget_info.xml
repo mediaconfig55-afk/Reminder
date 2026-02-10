@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="100dp"
+    android:minHeight="100dp"
+    android:updatePeriodMillis="3600000"
+    android:description="@string/app_name"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:initialLayout="@layout/reminder_widget"
+    android:previewImage="@mipmap/ic_launcher">
+</appwidget-provider>

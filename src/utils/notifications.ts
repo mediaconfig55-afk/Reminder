@@ -13,6 +13,53 @@ Notifications.setNotificationHandler({
     }),
 });
 
+export const setupNotificationCategories = async () => {
+    if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+            name: 'Varsayılan',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+            sound: 'default',
+            enableVibrate: true,
+        });
+        await Notifications.setNotificationChannelAsync('urgent', {
+            name: 'Acil',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 500, 200, 500],
+            lightColor: '#FF0000',
+            sound: 'default',
+            enableVibrate: true,
+        });
+        await Notifications.setNotificationChannelAsync('soft', {
+            name: 'Hafif',
+            importance: Notifications.AndroidImportance.DEFAULT,
+            vibrationPattern: [0, 100, 50, 100],
+            lightColor: '#00FF00',
+            sound: 'default',
+            enableVibrate: true,
+        });
+
+        // Bildirim aksiyonları (Tamamla/Ertele)
+        await Notifications.setNotificationCategoryAsync('reminder', [
+            {
+                identifier: 'complete',
+                buttonTitle: 'Tamamla',
+                options: {
+                    opensAppToForeground: true,
+                },
+            },
+            {
+                identifier: 'snooze',
+                buttonTitle: 'Ertele',
+                options: {
+                    opensAppToForeground: true,
+                },
+            },
+        ]);
+    }
+};
+
 export const requestNotificationPermissions = async () => {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -23,51 +70,7 @@ export const requestNotificationPermissions = async () => {
     }
 
     if (finalStatus === 'granted') {
-        // Android için bildirim kanalları oluştur
-        if (Platform.OS === 'android') {
-            await Notifications.setNotificationChannelAsync('default', {
-                name: 'Varsayılan',
-                importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250],
-                lightColor: '#FF231F7C',
-                sound: 'default',
-                enableVibrate: true,
-            });
-            await Notifications.setNotificationChannelAsync('urgent', {
-                name: 'Acil',
-                importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 500, 200, 500],
-                lightColor: '#FF0000',
-                sound: 'default',
-                enableVibrate: true,
-            });
-            await Notifications.setNotificationChannelAsync('soft', {
-                name: 'Hafif',
-                importance: Notifications.AndroidImportance.DEFAULT,
-                vibrationPattern: [0, 100, 50, 100],
-                lightColor: '#00FF00',
-                sound: 'default',
-                enableVibrate: true,
-            });
-
-            // Bildirim aksiyonları (Tamamla/Ertele)
-            await Notifications.setNotificationCategoryAsync('reminder', [
-                {
-                    identifier: 'complete',
-                    buttonTitle: 'Tamamla',
-                    options: {
-                        opensAppToForeground: false,
-                    },
-                },
-                {
-                    identifier: 'snooze',
-                    buttonTitle: 'Ertele',
-                    options: {
-                        opensAppToForeground: false,
-                    },
-                },
-            ]);
-        }
+        await setupNotificationCategories();
     }
 
     return finalStatus === 'granted';

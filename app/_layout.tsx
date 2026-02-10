@@ -85,21 +85,26 @@ export default function RootLayout() {
         }
       });
 
-      return () => subscription.remove();
-    }
+    });
+
+  // Ensure notification channels/categories are set up
+  setupNotificationCategories();
+
+  return () => subscription.remove();
+}
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+if (!loaded) {
+  return null;
+}
 
-  return (
-    <ThemeProvider>
-      <ErrorBoundary>
-        <RootLayoutNav />
-      </ErrorBoundary>
-    </ThemeProvider>
-  );
+return (
+  <ThemeProvider>
+    <ErrorBoundary>
+      <RootLayoutNav />
+    </ErrorBoundary>
+  </ThemeProvider>
+);
 }
 
 function RootLayoutNav() {

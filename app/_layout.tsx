@@ -85,10 +85,12 @@ export default function RootLayout() {
         }
       });
 
-
-
       // Ensure notification channels/categories are set up
-      setupNotificationCategories();
+      try {
+        setupNotificationCategories();
+      } catch (e) {
+        console.error('Failed to setup notification categories:', e);
+      }
 
       return () => subscription.remove();
     }

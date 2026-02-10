@@ -66,14 +66,21 @@ export default function RootLayout() {
         const reminderId = response.notification.request.content.data.reminderId as number;
 
         if (actionId === 'complete') {
+          await Notifications.dismissNotificationAsync(response.notification.request.identifier);
           await ReminderDB.toggleReminderCompletion(reminderId, true);
         } else if (actionId === 'snooze') {
-          // Snooze for 15 minutes
+          // Snooze for 5 minutes
           const reminder = await ReminderDB.getReminderById(reminderId);
           if (reminder && reminder.dueDate) {
+            await Notifications.dismissNotificationAsync(response.notification.request.identifier);
             const newDate = new Date().getTime() + 5 * 60 * 1000;
-            await ReminderDB.updateReminder(reminderId, { dueDate: newDate });
-            await scheduleReminderNotification({ ...reminder, dueDate: newDate });
+            // Ensure precise timing for snooze too
+            const snoozedDate = new Date(newDate);
+            snoozedDate.setSeconds(0);
+            snoozedDate.setMilliseconds(0);
+
+            await ReminderDB.updateReminder(reminderId, { dueDate: snoozedDate.getTime() });
+            await scheduleReminderNotification({ ...reminder, dueDate: snoozedDate.getTime() });
           }
         }
       });

@@ -91,11 +91,16 @@ export default function ModalScreen() {
       Alert.alert('Uyarı', 'Bildirim izni verilmediği için hatırlatıcı bildirimi çalışmayabilir.');
     }
 
+    // Ensure seconds and milliseconds are zeroed out for precise timing
+    const finalDate = new Date(date);
+    finalDate.setSeconds(0);
+    finalDate.setMilliseconds(0);
+
     try {
       const reminderData: any = {
         title,
         description,
-        dueDate: date.getTime(),
+        dueDate: finalDate.getTime(),
         isAllDay: 0,
         priority,
         categoryId: categoryId || 1,

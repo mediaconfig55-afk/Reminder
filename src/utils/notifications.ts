@@ -96,7 +96,7 @@ export const scheduleReminderNotification = async (reminder: Reminder) => {
         },
         trigger: {
             type: Notifications.SchedulableTriggerInputTypes.DATE,
-            date: new Date(reminder.dueDate),
+            date: new Date(new Date(reminder.dueDate).setSeconds(0, 0)),
             channelId: reminder.notificationSound || 'default',
         },
     });
